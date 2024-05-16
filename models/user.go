@@ -12,12 +12,18 @@ var modelName = "user"
 
 type User struct {
 	ID        string `json:"_id,omitempty" bson:"_id,omitempty"`
+	FirstName string `json:"firstName,omitempty" bson:"firstName,omitempty"`
+	LastName  string `json:"lastName,omitempty" bson:"lastName,omitempty"`
+	Email     string `json:"email,omitempty" bson:"email,omitempty"`
+}
+
+type CreateUserSchema struct {
 	FirstName string `json:"firstName,omitempty" bson:"firstName,omitempty" validate:"required"`
 	LastName  string `json:"lastName,omitempty" bson:"lastName,omitempty" validate:"required"`
 	Email     string `json:"email,omitempty" bson:"email,omitempty" validate:"required"`
 }
 
-type PatchUserData struct {
+type PatchUserSchema struct {
 	FirstName string `json:"firstName,omitempty" bson:"firstName,omitempty"`
 	LastName  string `json:"lastName,omitempty" bson:"lastName,omitempty"`
 	Email     string `json:"email,omitempty" bson:"email,omitempty"`
@@ -36,7 +42,7 @@ func (*User) Create(r io.ReadCloser) (User, error) {
 		return user, err
 	}
 
-	util.ValidateData[User](b)
+	util.ValidateData[CreateUserSchema](b)
 
 	err = json.Unmarshal(b, &user)
 
@@ -86,7 +92,7 @@ func (*User) Patch(id string, r io.ReadCloser) (User, error) {
 		return user, err
 	}
 
-	util.ValidateData[PatchUserData](b)
+	util.ValidateData[PatchUserSchema](b)
 
 	err = json.Unmarshal(b, &user)
 
