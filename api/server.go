@@ -18,12 +18,21 @@ func NewServer(listenAddr string) *Server {
 	}
 }
 
+func registerRoutes() *mux.Router {
+	router := mux.NewRouter()
+
+	userRoutes := NewUserRoutes()
+	userRoutes.RegisterRoutes(router)
+
+	router.HandleFunc("/", helloWorldHandler)
+
+	return router
+}
+
 func (s *Server) Start() error {
 	log.Println("Server listening on port 4000!")
 
-	router := mux.NewRouter()
-
-	router.HandleFunc("/", helloWorldHandler)
+	router := registerRoutes()
 
 	return http.ListenAndServe(s.listenAddr, router)
 }
